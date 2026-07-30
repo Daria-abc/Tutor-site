@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ question.title if question else "Вопрос" }}{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px; max-width:680px;">
+  {% if not question %}
+    <p>Вопрос не найден.</p>
+  {% else %}
+    <span class="tag">{{ question.subject_tag }}</span>
+    {% if question.grade_tag %}<span class="tag">{{ GRADE_TIER_LABELS[question.grade_tag] }}</span>{% endif %}
+    <h2 style="margin:10px 0 6px;">{{ question.title }}</h2>
+    <p>{{ question.body }}</p>
+
+    <h3>Ответы</h3>
+    {% for a in answers %}
+      <div class="card" style="{% if question.best_answer_id == a.id %}border-color:var(--gold-400); background:#fffaf0;{% endif %}">
+        <p style="margin:0 0 8px;">{{ a.body }}</p>
+        <p style="margin:0; font-size:0.8rem; color:#8a6469;">
+          {{ a.created_at.strftime("%d.%m.%Y %H:%M") }}
+          {% if question.best_answer_id == a.id %} · <span style="color:var(--gold-400); font-weight:700;">Лучший ответ</span>{% endif %}
+        </p>
+        {% if user and user.id == question.author_id and not question.best_answer_id %}
+          <form method="post" action="/forum/{{ question.id }}/best/{{ a.id }}" style="margin-top:10px;">
+            <button class="btn btn-outline" type="submit">Выбрать лучшим</button>
+          </form>
+        {% endif %}
+      </div>
+    {% else %}
+      <p style="color:#8a6469;">Пока никто не ответил.</p>
+    {% endfor %}
+
+    {% if user %}
+      <div class="card">
+        <form method="post" action="/forum/{{ question.id }}/answer">
+          <div class="field"><textarea name="body" rows="3" required placeholder="Ваш ответ..."></textarea></div>
+          <button class="btn" type="submit">Ответить</button>
+        </form>
+      </div>
+    {% else %}
+      <p><a href="/login">Войдите</a>, чтобы ответить.</p>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

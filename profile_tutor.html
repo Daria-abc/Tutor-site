@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Личный кабинет репетитора{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px; max-width:820px;">
+  <h2>Здравствуйте, {{ user.full_name }}</h2>
+  <span class="tag tag-gold">Репетитор</span>
+  {% if user.grade %}<span class="tag">{{ user.grade }} класс</span>
+  {% elif user.edu_status == "student" %}<span class="tag">Студент</span>
+  {% elif user.edu_status == "higher_ed" %}<span class="tag">Высшее образование</span>{% endif %}
+
+  <h3 style="margin-top:32px;">Ваши предметы преподавания</h3>
+  {% if not user.tutor_subjects %}
+    <p style="color:#8a6469;">Пока нет ни одного подтверждённого предмета.</p>
+  {% endif %}
+  {% for ts in user.tutor_subjects %}
+    <div class="card">
+      <h4 style="margin:0 0 8px;">{{ ts.subject }}
+        {% if ts.via_forum %}<span class="tag tag-gold">через форум</span>{% endif %}
+      </h4>
+      <p style="margin:2px 0; font-size:0.9rem;">
+        Классы: до {{ GRADE_TIERS[ts.grade_tier_max - 1][1] }} включительно (каскадом вниз)
+      </p>
+      <p style="margin:2px 0;">
+        {% for q in ts.qualifications %}<span class="tag">{{ q }}</span>{% endfor %}
+      </p>
+      <form method="post" action="/account/tutor-profile" style="margin-top:14px;">
+        <input type="hidden" name="subject" value="{{ ts.subject }}">
+        <div class="field">
+          <label>Личные достижения (по желанию)</label>
+          <textarea name="achievements" rows="2">{{ ts.achievements or '' }}</textarea>
+        </div>
+        <div class="field">
+          <label>Описание (по желанию)</label>
+          <textarea name="description" rows="3">{{ ts.description or '' }}</textarea>
+        </div>
+        <div class="field">
+          <label>Цена за занятие, ₽</label>
+          <input type="number" name="price" value="{{ ts.price or 0 }}">
+        </div>
+        <div class="field">
+          <label>За что можно получить скидку (по желанию)</label>
+          <input type="text" name="discount_note" value="{{ ts.discount_note or '' }}">
+        </div>
+        <button class="btn btn-outline" type="submit">Сохранить профиль по предмету</button>
+      </form>
+    </div>
+  {% endfor %}
+
+  <div class="card" style="text-align:center;">
+    <a class="btn btn-gold" href="/become-tutor">Добавить ещё один предмет / уровень</a>
+  </div>
+
+  <h3>Мой календарь</h3>
+  <div class="card">
+    <form method="post" action="/account/calendar/add" style="display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;">
+      <div class="field" style="margin-bottom:0;"><label>Дата</label><input type="date" name="date" required></div>
+      <div class="field" style="margin-bottom:0;"><label>Время</label><input type="time" name="time"></div>
+      <div class="field" style="margin-bottom:0; flex:1;"><label>Заметка</label><input type="text" name="note" placeholder="Занятие с Ивановым, §12" required></div>
+      <button class="btn btn-outline" type="submit">Добавить</button>
+    </form>
+    {% if calendar_entries %}
+      <table style="width:100%; margin-top:16px; border-collapse:collapse;">
+        {% for e in calendar_entries %}
+        <tr style="border-top:1px solid var(--line);">
+          <td style="padding:8px 0; width:110px;">{{ e.date }}</td>
+          <td style="padding:8px 0; width:70px;">{{ e.time or '' }}</td>
+          <td style="padding:8px 0;">{{ e.note }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p style="color:#8a6469; font-size:0.9rem; margin-top:14px;">Записей пока нет.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Физтех-репетитор — репетиторы из лицеистов{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-text">
+      <h1>Репетитор, который недавно сам сдавал этот предмет</h1>
+      <p>Найди репетитора среди учеников и выпускников Физтех-лицея им. П.Л. Капицы —
+         или сам стань им, сдав тест или отвечая на форуме.</p>
+      <div class="hero-actions">
+        {% if user %}
+          <a class="btn" href="/search">Найти репетитора</a>
+          <a class="btn btn-outline" href="/become-tutor">Стать репетитором</a>
+        {% else %}
+          <a class="btn" href="/register">Начать</a>
+          <a class="btn btn-outline" href="/search">Смотреть репетиторов</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div>
+      <div class="hero-stage" id="hero-stage">
+        <div class="crest" id="crest">
+          <div class="face front">ФЛ</div>
+          <div class="face back">ФЛ</div>
+          <div class="face right">Ф</div>
+          <div class="face left">Л</div>
+          <div class="face top">2026</div>
+          <div class="face bottom">2026</div>
+        </div>
+      </div>
+      <div class="hero-hint">Потяни мышкой, чтобы повернуть эмблему</div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2>Как это устроено</h2>
+    <p class="lead">Два пути стать репетитором — и один понятный способ найти нужного человека.</p>
+    <div class="grid-3">
+      <div class="card">
+        <span class="tag">Шаг 1</span>
+        <h3 style="font-size:1.05rem; margin:12px 0 6px;">Регистрация</h3>
+        <p style="font-size:0.92rem; margin:0;">ФИО, класс, контакты — и уникальный ID, который система хранит для тебя незаметно.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Шаг 2</span>
+        <h3 style="font-size:1.05rem; margin:12px 0 6px;">Тест или форум</h3>
+        <p style="font-size:0.92rem; margin:0;">Сдай тест по предмету на 70%+ — или набери {{ 100 }} {{ CURRENCY_NAME }} на форуме.</p>
+      </div>
+      <div class="card">
+        <span class="tag">Шаг 3</span>
+        <h3 style="font-size:1.05rem; margin:12px 0 6px;">Занятия</h3>
+        <p style="font-size:0.92rem; margin:0;">Ученики находят тебя по фильтрам, пишут напрямую, ты ведёшь свой календарь.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="/static/js/hero.js"></script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Регистрация — Физтех-репетитор{% endblock %}
+{% block content %}
+<div class="form-card">
+  <h2 style="margin-top:0;">Регистрация</h2>
+  <form method="post" action="/register">
+    <div class="field">
+      <label for="full_name">ФИО</label>
+      <input type="text" id="full_name" name="full_name" required>
+    </div>
+    <div class="field">
+      <label for="grade">Класс обучения (если школьник)</label>
+      <input type="number" id="grade" name="grade" min="1" max="11" placeholder="Например, 8">
+    </div>
+    <div class="field">
+      <label for="contact">Email или телефон</label>
+      <input type="text" id="contact" name="contact" required>
+    </div>
+    <div class="field">
+      <label for="password">Пароль</label>
+      <input type="password" id="password" name="password" required minlength="6">
+    </div>
+    <button class="btn" type="submit" style="width:100%;">Зарегистрироваться</button>
+  </form>
+  <p style="margin-top:18px; font-size:0.9rem;">Уже есть аккаунт? <a href="/login">Войти</a></p>
+</div>
+{% endblock %}

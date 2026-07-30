@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Найти репетитора{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px;">
+  <h2>Найти репетитора</h2>
+  <p style="color:#6b4a4f; margin-bottom:24px;">Показываем только тех, кто полностью подходит под все три параметра.</p>
+
+  <form method="get" action="/search" class="filters">
+    <div class="field">
+      <label for="subject">Предмет</label>
+      <select id="subject" name="subject">
+        <option value="">— выберите —</option>
+        {% for s in SUBJECTS %}
+          <option value="{{ s }}" {% if s == f_subject %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="grade_tier">Класс</label>
+      <select id="grade_tier" name="grade_tier">
+        <option value="0">— выберите —</option>
+        {% for tier, label in GRADE_TIERS %}
+          <option value="{{ tier }}" {% if tier == f_grade_tier %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="qualification">Цель занятий</label>
+      <select id="qualification" name="qualification">
+        <option value="">— выберите —</option>
+        {% for q in QUALIFICATIONS %}
+          <option value="{{ q }}" {% if q == f_qualification %}selected{% endif %}>{{ q }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn" type="submit" style="align-self:flex-end;">Найти</button>
+  </form>
+
+  {% if searched %}
+    {% if tutors %}
+      <div class="grid-3">
+        {% for ts in tutors %}
+          <a href="/tutor/{{ ts.id }}" class="card" style="display:block; color:inherit;">
+            <h3 style="font-size:1.05rem; margin:0 0 6px;">{{ ts.user.full_name }}</h3>
+            <p style="font-size:0.85rem; color:#8a6469; margin:0 0 8px;">
+              {% if ts.user.grade %}{{ ts.user.grade }} класс
+              {% elif ts.user.edu_status == "student" %}Студент
+              {% elif ts.user.edu_status == "higher_ed" %}Высшее образование{% endif %}
+            </p>
+            <span class="tag">{{ ts.subject }}</span>
+            {% if ts.price %}<span class="tag tag-gold">от {{ ts.price }} ₽</span>{% endif %}
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">По этим фильтрам пока никого не нашлось. Попробуйте изменить параметры.</div>
+    {% endif %}
+  {% else %}
+    <div class="empty-state">Выберите предмет, класс и цель занятий, чтобы увидеть репетиторов.</div>
+  {% endif %}
+</div>
+{% endblock %}

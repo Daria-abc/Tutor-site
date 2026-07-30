@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Физтех-репетитор{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <nav class="nav">
+    <div class="wrap">
+      <a class="brand" href="/">Физтех<span>-репетитор</span></a>
+      <div class="nav-links">
+        <a href="/">Главная</a>
+        <a href="/search">Найти репетитора</a>
+        <a href="/forum">Форум</a>
+        {% if user %}
+          <a href="/account">Личный кабинет</a>
+          <a href="/logout">Выйти</a>
+        {% else %}
+          <a href="/login">Войти</a>
+          <a class="nav-cta" href="/register">Регистрация</a>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Физтех-репетитор — сервис поиска репетиторов среди лицеистов АНОО «Физтех-лицей» им. П.Л. Капицы.
+    </div>
+  </footer>
+</body>
+</html>

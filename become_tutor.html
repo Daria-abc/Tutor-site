@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Стать репетитором{% endblock %}
+{% block content %}
+<div class="form-card" style="max-width:560px;">
+  <h2 style="margin-top:0;">Хотите стать репетитором?</h2>
+  <p style="color:#6b4a4f; font-size:0.95rem;">
+    Выберите предмет, классы, с которыми хотите работать, и квалификацию.
+    Дальше — тест. Наберите {{ 70 }}% или больше, и вы получите статус репетитора.
+  </p>
+
+  {% if retry_blocked_until %}
+    <div class="alert alert-error">
+      Вы уже пробовали сдать этот тест и не набрали проходной балл.
+      Повторная попытка будет доступна {{ retry_blocked_until.strftime("%d.%m.%Y в %H:%M") }} (UTC).
+    </div>
+  {% endif %}
+
+  <form method="post" action="/become-tutor/start">
+    <div class="field">
+      <label for="subject">Предмет</label>
+      <select id="subject" name="subject" required>
+        {% for s in SUBJECTS %}
+          <option value="{{ s }}">{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="grade_tier">С какими классами хотите работать</label>
+      <select id="grade_tier" name="grade_tier" required>
+        {% for tier, label in GRADE_TIERS %}
+          <option value="{{ tier }}">{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="qualification">Категория</label>
+      <select id="qualification" name="qualification" required>
+        {% for q in QUALIFICATIONS %}
+          <option value="{{ q }}">{{ q }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn" type="submit" style="width:100%;">Начать тест</button>
+  </form>
+
+  <p style="margin-top:18px; font-size:0.85rem; color:#8a6469;">
+    Не хотите сдавать тест сейчас? Вы можете стать репетитором и через форум —
+    отвечайте на вопросы, набирайте {{ CURRENCY_NAME }}.
+    <a href="/account">Пропустить и перейти в кабинет</a>
+  </p>
+</div>
+{% endblock %}

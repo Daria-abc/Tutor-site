@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Форум{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px;">
+  <h2>Форум</h2>
+  <p style="color:#6b4a4f;">Отвечайте на вопросы других учеников — за выбранный лучший ответ начисляются {{ CURRENCY_NAME }}.</p>
+
+  <form method="get" action="/forum" class="filters">
+    <div class="field">
+      <label for="subject">Предмет / тема</label>
+      <select id="subject" name="subject">
+        <option value="">Все предметы</option>
+        {% for s in SUBJECTS %}
+          <option value="{{ s }}" {% if s == f_subject %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="grade_tier">Класс</label>
+      <select id="grade_tier" name="grade_tier">
+        <option value="0">Любой</option>
+        {% for tier, label in GRADE_TIERS %}
+          <option value="{{ tier }}" {% if tier == f_grade_tier %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button class="btn btn-outline" type="submit" style="align-self:flex-end;">Фильтровать</button>
+  </form>
+
+  {% if user %}
+  <div class="card">
+    <h3 style="margin-top:0; font-size:1rem;">Задать вопрос</h3>
+    <form method="post" action="/forum/ask">
+      <div class="field">
+        <label>Предмет / тема</label>
+        <select name="subject_tag">{% for s in SUBJECTS %}<option value="{{ s }}">{{ s }}</option>{% endfor %}</select>
+      </div>
+      <div class="field">
+        <label>Класс</label>
+        <select name="grade_tag">
+          <option value="0">Без указания</option>
+          {% for tier, label in GRADE_TIERS %}<option value="{{ tier }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+      <div class="field"><label>Заголовок</label><input type="text" name="title" required></div>
+      <div class="field"><label>Текст вопроса</label><textarea name="body" rows="3" required></textarea></div>
+      <button class="btn" type="submit">Опубликовать</button>
+    </form>
+  </div>
+  {% else %}
+    <p><a href="/login">Войдите</a>, чтобы задать вопрос.</p>
+  {% endif %}
+
+  {% for q in questions %}
+    <a href="/forum/{{ q.id }}" class="card" style="display:block; color:inherit;">
+      <span class="tag">{{ q.subject_tag }}</span>
+      {% if q.grade_tag %}<span class="tag">{{ GRADE_TIER_LABELS[q.grade_tag] }}</span>{% endif %}
+      {% if q.best_answer_id %}<span class="tag tag-gold">Есть лучший ответ</span>{% endif %}
+      <h3 style="font-size:1.05rem; margin:8px 0 4px;">{{ q.title }}</h3>
+      <p style="margin:0; font-size:0.9rem; color:#6b4a4f;">{{ q.body[:140] }}{% if q.body|length > 140 %}…{% endif %}</p>
+    </a>
+  {% else %}
+    <div class="empty-state">Вопросов пока нет — станьте первым!</div>
+  {% endfor %}
+</div>
+{% endblock %}

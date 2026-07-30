@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Сообщения{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px; max-width:640px;">
+  <h2>Переписка {% if other %}с {{ other.full_name }}{% endif %}</h2>
+  <div class="card">
+    {% for m in thread %}
+      <p style="margin:6px 0;">
+        <strong>{{ "Вы" if m.sender_id == user.id else other.full_name }}:</strong> {{ m.body }}
+        <span style="color:#8a6469; font-size:0.78rem;"> — {{ m.created_at.strftime("%d.%m %H:%M") }}</span>
+      </p>
+    {% else %}
+      <p style="color:#8a6469;">Сообщений пока нет.</p>
+    {% endfor %}
+  </div>
+  <form method="post" action="/message/send">
+    <input type="hidden" name="recipient_id" value="{{ other.id }}">
+    <div class="field"><textarea name="body" rows="2" required></textarea></div>
+    <button class="btn" type="submit">Отправить</button>
+  </form>
+</div>
+{% endblock %}

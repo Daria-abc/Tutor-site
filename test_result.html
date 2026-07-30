@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Результат теста{% endblock %}
+{% block content %}
+<div class="form-card">
+  <h2 style="margin-top:0;">Результат: {{ score }}%</h2>
+  {% if passed %}
+    <div class="alert alert-success">
+      Поздравляем! Вы получили статус репетитора по предмету «{{ subject }}».
+      Заполните описание и цену в личном кабинете, чтобы ученики могли вас найти.
+    </div>
+    <a class="btn" href="/account" style="width:100%; text-align:center;">Перейти в кабинет</a>
+  {% else %}
+    <div class="alert alert-error">
+      Пока не хватает баллов для статуса репетитора. Повторная попытка будет доступна через 24 часа.
+    </div>
+    <a class="btn btn-outline" href="/account" style="width:100%; text-align:center;">В личный кабинет</a>
+  {% endif %}
+</div>
+{% endblock %}

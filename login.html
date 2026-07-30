@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Вход — Физтех-репетитор{% endblock %}
+{% block content %}
+<div class="form-card">
+  <h2 style="margin-top:0;">Вход</h2>
+  {% if error %}
+    <div class="alert alert-error">Неверный контакт или пароль. Попробуйте снова.</div>
+  {% endif %}
+  <form method="post" action="/login">
+    <div class="field">
+      <label for="contact">Email или телефон</label>
+      <input type="text" id="contact" name="contact" required>
+    </div>
+    <div class="field">
+      <label for="password">Пароль</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <button class="btn" type="submit" style="width:100%;">Войти</button>
+  </form>
+  <p style="margin-top:18px; font-size:0.9rem;">Нет аккаунта? <a href="/register">Зарегистрироваться</a></p>
+</div>
+{% endblock %}

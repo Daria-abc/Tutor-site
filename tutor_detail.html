@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ ts.user.full_name if ts else "Репетитор" }}{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px; max-width:640px;">
+  {% if not ts %}
+    <p>Репетитор не найден.</p>
+  {% else %}
+    <h2 style="margin-bottom:4px;">{{ ts.user.full_name }}</h2>
+    <p style="color:#8a6469; margin-top:0;">
+      {% if ts.user.grade %}{{ ts.user.grade }} класс
+      {% elif ts.user.edu_status == "student" %}Студент
+      {% elif ts.user.edu_status == "higher_ed" %}Высшее образование
+        {% if ts.user.degree %} · {{ ts.user.degree }}{% endif %}
+      {% endif %}
+      {% if ts.user.education_profile %} · профиль: {{ ts.user.education_profile }}{% endif %}
+    </p>
+
+    <div class="card">
+      <span class="tag">{{ ts.subject }}</span>
+      <p style="margin:10px 0 4px; font-size:0.9rem;">
+        Классы: до {{ GRADE_TIERS[ts.grade_tier_max - 1][1] }} включительно
+      </p>
+      <p style="margin:4px 0;">
+        {% for q in ts.qualifications %}<span class="tag">{{ q }}</span>{% endfor %}
+      </p>
+      {% if ts.achievements %}<p><strong>Достижения:</strong> {{ ts.achievements }}</p>{% endif %}
+      {% if ts.description %}<p><strong>Описание:</strong> {{ ts.description }}</p>{% endif %}
+      {% if ts.price %}<p><strong>Цена:</strong> {{ ts.price }} ₽ за занятие</p>{% endif %}
+      {% if ts.discount_note %}<p><strong>Скидка:</strong> {{ ts.discount_note }}</p>{% endif %}
+    </div>
+
+    {% if user and user.id != ts.user_id %}
+      <div class="card">
+        <h3 style="margin-top:0; font-size:1rem;">Написать репетитору</h3>
+        <form method="post" action="/message/send">
+          <input type="hidden" name="recipient_id" value="{{ ts.user_id }}">
+          <div class="field">
+            <textarea name="body" rows="3" placeholder="Здравствуйте! Хотел бы узнать..." required></textarea>
+          </div>
+          <button class="btn" type="submit">Отправить</button>
+        </form>
+      </div>
+    {% elif not user %}
+      <p><a href="/login">Войдите</a>, чтобы написать репетитору.</p>
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

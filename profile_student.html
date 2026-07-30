@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Личный кабинет{% endblock %}
+{% block content %}
+<div class="wrap" style="padding-top:36px; max-width:760px;">
+  <h2>Здравствуйте, {{ user.full_name }}</h2>
+  <span class="tag">Ученик</span>
+  {% if user.grade %}<span class="tag">{{ user.grade }} класс</span>{% endif %}
+
+  <div class="card" style="margin-top:24px;">
+    <h3 style="margin-top:0; font-size:1.05rem;">Основные данные</h3>
+    <p style="margin:4px 0;"><strong>Контакты:</strong> {{ user.contact }}</p>
+    <form method="post" action="/account/update-grade" style="display:flex; gap:10px; align-items:flex-end; margin-top:12px;">
+      <div class="field" style="margin-bottom:0;">
+        <label for="grade">Изменить класс</label>
+        <input type="number" id="grade" name="grade" min="1" max="11" value="{{ user.grade or '' }}">
+      </div>
+      <button class="btn btn-outline" type="submit">Сохранить</button>
+    </form>
+    <p style="font-size:0.82rem; color:#8a6469; margin-top:10px;">Класс автоматически увеличивается на 1 каждое 1 сентября.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0; font-size:1.05rem;">Предметы, по которым вы ищете репетитора</h3>
+    {% if user.wanted_subjects %}
+      {% for w in user.wanted_subjects %}<span class="tag">{{ w.subject }}</span>{% endfor %}
+    {% else %}
+      <p style="color:#8a6469; font-size:0.9rem;">Пока ничего не выбрано.</p>
+    {% endif %}
+    <form method="post" action="/account/wanted-subject" style="display:flex; gap:10px; align-items:flex-end; margin-top:14px;">
+      <div class="field" style="margin-bottom:0; flex:1;">
+        <label for="subject">Добавить предмет</label>
+        <select id="subject" name="subject">
+          {% for s in SUBJECTS %}<option value="{{ s }}">{{ s }}</option>{% endfor %}
+        </select>
+      </div>
+      <button class="btn btn-outline" type="submit">Добавить</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0; font-size:1.05rem;">Дать объявление</h3>
+    <p style="color:#8a6469; font-size:0.88rem;">Подходящие репетиторы увидят его в своём кабинете.</p>
+    <form method="post" action="/account/announcement">
+      <div class="field">
+        <label for="a_subject">Предмет</label>
+        <select id="a_subject" name="subject">{% for s in SUBJECTS %}<option value="{{ s }}">{{ s }}</option>{% endfor %}</select>
+      </div>
+      <div class="field">
+        <label for="a_grade">Класс</label>
+        <select id="a_grade" name="grade_tier">{% for tier, label in GRADE_TIERS %}<option value="{{ tier }}">{{ label }}</option>{% endfor %}</select>
+      </div>
+      <div class="field">
+        <label for="a_qual">Цель занятий</label>
+        <select id="a_qual" name="qualification">{% for q in QUALIFICATIONS %}<option value="{{ q }}">{{ q }}</option>{% endfor %}</select>
+      </div>
+      <button class="btn" type="submit">Опубликовать объявление</button>
+    </form>
+  </div>
+
+  <div class="card" style="text-align:center;">
+    <h3 style="margin-top:0; font-size:1.05rem;">Хотите стать репетитором?</h3>
+    <a class="btn btn-gold" href="/become-tutor">Пройти тест</a>
+  </div>
+</div>
+{% endblock %}
