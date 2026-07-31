@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Тест — {{ subject }}{% endblock %}
+{% block content %}
+<div class="wrap" style="max-width:680px; padding-top:36px;">
+  <h2>Тест: {{ subject }}</h2>
+  <p style="color:#6b4a4f;">Нужно набрать 70% правильных ответов, чтобы получить статус репетитора.</p>
+
+  <form method="post" action="/become-tutor/submit">
+    <input type="hidden" name="subject" value="{{ subject }}">
+    <input type="hidden" name="grade_tier" value="{{ grade_tier }}">
+    <input type="hidden" name="qualification" value="{{ qualification }}">
+
+    {% for question in questions %}
+      <div class="card">
+        <input type="hidden" name="q_text_{{ loop.index0 }}" value="{{ question.q }}">
+        <input type="hidden" name="q_correct_{{ loop.index0 }}" value="{{ question.correct }}">
+        <p style="font-weight:600; margin-top:0;">{{ loop.index }}. {{ question.q }}</p>
+        {% set q_index = loop.index0 %}
+        {% for opt in question.options %}
+          <label style="display:block; margin-bottom:8px; font-weight:400;">
+            <input type="radio" name="answer_{{ q_index }}" value="{{ loop.index0 }}" required>
+            {{ opt }}
+          </label>
+        {% endfor %}
+      </div>
+    {% endfor %}
+
+    <button class="btn" type="submit" style="width:100%;">Завершить тест</button>
+  </form>
+</div>
+{% endblock %}
